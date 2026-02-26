@@ -1,0 +1,567 @@
+wireless ap v2
+
+----------------
+
+SWITCH
+
+
+Ap connected 33
+wire to router 15
+
+
+
+!
+hostname Switch1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+!
+no aaa new-model
+system mtu routing 1500
+authentication mac-move permit
+ip subnet-zero
+ip routing
+no ip domain-lookup
+ip dhcp excluded-address 10.0.0.33
+ip dhcp excluded-address 10.0.0.3
+ip dhcp excluded-address 10.0.0.55
+ip dhcp excluded-address 10.0.0.66
+ip dhcp excluded-address 10.0.0.99
+!
+ip dhcp pool vlan1
+   network 10.0.0.32 255.255.255.224
+   domain-name calvin.com
+   dns-server 1.1.1.1
+   default-router 10.0.0.33
+!
+ip dhcp pool vlan3
+   network 10.0.0.64 255.255.255.224
+   dns-server 1.1.1.1
+   default-router 10.0.0.65
+   domain-name cambl.com
+!
+ip dhcp pool vlan4
+   network 10.0.0.96 255.255.255.224
+   dns-server 1.1.1.1
+   default-router 10.0.0.97 255.255.255.224
+   domain-name grrrrr.com
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1188179200
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1188179200
+ revocation-check none
+ rsakeypair TP-self-signed-1188179200
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree etherchannel guard misconfig
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+interface FastEthernet0/1
+!
+interface FastEthernet0/2
+!
+interface FastEthernet0/3
+!
+interface FastEthernet0/4
+!
+interface FastEthernet0/5
+!
+interface FastEthernet0/6
+!
+interface FastEthernet0/7
+!
+interface FastEthernet0/8
+!
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+!
+interface FastEthernet0/11
+!
+interface FastEthernet0/12
+!
+interface FastEthernet0/13
+!
+interface FastEthernet0/14
+!
+interface FastEthernet0/15
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/16
+!
+interface FastEthernet0/17
+!
+interface FastEthernet0/18
+!
+interface FastEthernet0/19
+!
+interface FastEthernet0/20
+!
+interface FastEthernet0/21
+!
+interface FastEthernet0/22
+!
+interface FastEthernet0/23
+!
+interface FastEthernet0/24
+!
+interface FastEthernet0/25
+!
+interface FastEthernet0/26
+!
+interface FastEthernet0/27
+!
+interface FastEthernet0/28
+!
+interface FastEthernet0/29
+!
+interface FastEthernet0/30
+!
+interface FastEthernet0/31
+!
+interface FastEthernet0/32
+!
+interface FastEthernet0/33
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet0/34
+!
+interface FastEthernet0/35
+!
+interface FastEthernet0/36
+!
+interface FastEthernet0/37
+!
+interface FastEthernet0/38
+!
+interface FastEthernet0/39
+!
+interface FastEthernet0/40
+!
+interface FastEthernet0/41
+!
+interface FastEthernet0/42
+!
+interface FastEthernet0/43
+!
+interface FastEthernet0/44
+!
+interface FastEthernet0/45
+!
+interface FastEthernet0/46
+!
+interface FastEthernet0/47
+!
+interface FastEthernet0/48
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface GigabitEthernet0/3
+!
+interface GigabitEthernet0/4
+!
+interface Vlan1
+ ip address 10.0.0.2 255.255.255.224
+ no shut
+!
+interface Vlan2
+ ip address 10.0.0.33 255.255.255.224
+!
+interface Vlan3
+ ip address 10.0.0.65 255.255.255.224
+!
+interface Vlan4
+ ip address 10.0.0.97 255.255.255.224
+!
+ip default-gateway 10.0.0.1
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
+ip http server
+ip http secure-server
+!
+!
+ip sla enable reaction-alerts
+!
+!
+!
+line con 0
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+end
+
+---------------------------------------
+
+
+router 
+
+
+
+G0/0/0 connected to wifi switch
+G0/0/1 connected to l3 PoE switch
+
+
+
+!
+hostname Router
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+vtp domain cisco
+vtp mode transparent
+multilink bundle-name authenticated
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO21400XZX
+!
+spanning-tree extend system-id
+!
+!
+redundancy
+ mode none
+!
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ ip address dhcp
+ ip nat outside
+ negotiation auto
+!
+interface GigabitEthernet0/0/1
+ ip address 10.0.0.1 255.255.255.0
+ ip nat inside
+ negotiation auto
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+interface Vlan1
+ no ip address
+!
+ip nat pool pool 192.168.41.160 192.168.41.191 netmask 255.255.255.224
+ip nat inside source list 10 pool pool
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+ip tftp source-interface GigabitEthernet0/0/0
+!
+!
+access-list 10 permit 10.0.0.0 0.0.0.255
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+ntp server pool.ntp.org
+!
+end
+
+
+
+---------------------------------------------
+
+
+Wireless Ap
+
+
+
+hostname ap
+
+
+logging rate-limit console 9
+enable secret 5 $1$M2CN$frwOUU0L4S3K.zEzGmU.r0
+
+aaa new-model
+
+aaa group server radius rad_eap
+ server name freeradius
+
+aaa group server radius rad_mac
+
+aaa group server radius rad_acct
+                                                                         !
+aaa group server radius rad_admin
+
+aaa group server tacacs+ tac_admin
+
+aaa group server radius rad_pmip
+
+aaa group server radius dummy
+
+aaa group server radius rad_eap3
+ server name freeradius
+
+aaa authentication login eap_methods group rad_eap
+aaa authentication login mac_methods local
+aaa authentication login eap_methods3 group rad_eap3
+aaa authorization exec default local
+aaa accounting network acct_methods start-stop group rad_acct
+
+aaa session-id common
+no ip source-route
+no ip cef
+
+dot11 pause-time 100
+dot11 syslog
+
+dot11 ssid CCNP_34_111_SSID_1
+   vlan 2
+   authentication open
+   authentication key-management wpa version 2
+   guest-mode
+   mbssid guest-mode
+   wpa-psk ascii 7 00141215174C04140B701E1D
+
+dot11 ssid CCNP_34_111_SSID_2
+   vlan 3
+   authentication open
+   authentication key-management wpa version 2
+   mbssid guest-mode
+   wpa-psk ascii 7 06160E325F59060B01464058
+
+dot11 ssid CCNP_34_111_SSID_3
+   vlan 4
+   authentication open eap eap_methods3
+   authentication network-eap eap_methods3
+   authentication key-management wpa
+   mbssid guest-mode
+
+
+dot11 wpa handshake timeout 500
+
+no ipv6 cef
+
+username Cisco password 7 01300F175804
+
+bridge irb
+
+interface Dot11Radio0
+ no ip address
+ shutdown
+ 
+ encryption vlan 3 mode ciphers aes-ccm
+ antenna gain 0
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+
+interface Dot11Radio1
+ no ip address
+ 
+ encryption vlan 2 mode ciphers aes-ccm
+ 
+ encryption vlan 4 mode ciphers aes-ccm 
+ 
+ encryption vlan 3 mode ciphers aes-ccm
+ 
+ encryption vlan 1 key 2 size 128bit 7 A9E5C82C2DA40E23FF3DBB9FD16E transmit-key
+ encryption vlan 1 mode wep mandatory
+ 
+ ssid CCNP_34_111_SSID_1
+ 
+ ssid CCNP_34_111_SSID_2
+ 
+ ssid CCNP_34_111_SSID_3
+ 
+ antenna gain 0
+ peakdetect
+ dfs band 3 block
+ mbssid
+ channel dfs
+ station-role root
+
+interface Dot11Radio1.1
+ encapsulation dot1Q 1 native
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+
+interface Dot11Radio1.2
+ encapsulation dot1Q 2
+ bridge-group 2
+ bridge-group 2 subscriber-loop-control
+ bridge-group 2 spanning-disabled
+ bridge-group 2 block-unknown-source
+ no bridge-group 2 source-learning
+ no bridge-group 2 unicast-flooding
+
+interface Dot11Radio1.3
+ encapsulation dot1Q 3
+ bridge-group 3
+ bridge-group 3 subscriber-loop-control
+ bridge-group 3 spanning-disabled
+ bridge-group 3 block-unknown-source
+ no bridge-group 3 source-learning
+ no bridge-group 3 unicast-flooding
+
+interface Dot11Radio1.4
+ encapsulation dot1Q 4
+ bridge-group 4
+ bridge-group 4 subscriber-loop-control
+ bridge-group 4 spanning-disabled
+ bridge-group 4 block-unknown-source
+ no bridge-group 4 source-learning
+ no bridge-group 4 unicast-flooding
+
+interface Dot11Radio1.21
+
+interface Dot11Radio1.31
+
+interface Dot11Radio1.41
+
+interface GigabitEthernet0
+ no ip address
+ duplex auto
+ speed auto
+
+interface GigabitEthernet0.1
+ encapsulation dot1Q 1 native
+ bridge-group 1
+ bridge-group 1 spanning-disabled
+ no bridge-group 1 source-learning
+
+interface GigabitEthernet0.2
+ encapsulation dot1Q 2
+ bridge-group 2
+ bridge-group 2 spanning-disabled
+ no bridge-group 2 source-learning
+
+interface GigabitEthernet0.3
+ encapsulation dot1Q 3
+ bridge-group 3
+ bridge-group 3 spanning-disabled
+ no bridge-group 3 source-learning
+
+interface GigabitEthernet0.4
+ encapsulation dot1Q 4
+ bridge-group 4
+ bridge-group 4 spanning-disabled
+ no bridge-group 4 source-learning
+
+interface GigabitEthernet0.21
+
+interface GigabitEthernet0.31
+
+interface GigabitEthernet0.41
+
+interface BVI1
+ mac-address 44d3.ca5a.86cc
+ ip address 10.0.0.3 255.255.255.0
+ ipv6 address dhcp
+ ipv6 address autoconfig
+ ipv6 enable
+
+ip default-gateway 192.168.40.1
+ip forward-protocol nd
+ip http server
+no ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+ip radius source-interface BVI1
+
+radius-server attribute 32 include-in-access-req format %h
+
+radius server freeradius
+ address ipv4 10.0.0.10 auth-port 1812 acct-port 1813
+ key 7 0835495D1D100B1043595F
+
+bridge 1 route ip
+
+line con 0
+line vty 0 4
+ transport input all
+
+end
+
+
